@@ -16,7 +16,13 @@ public class Events {
     private static final String BASE_URL = "http://localhost:5500";
     private static final Scanner scanner = new Scanner(System.in);
 
+    public static void clearConsole() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
     public static void manageEvents() throws IOException {
+        clearConsole();
         while (true) {
             System.out.println("\n1. Create Event");
             // System.out.println("2. View All Events");
@@ -32,15 +38,29 @@ public class Events {
             scanner.nextLine();
 
             switch (choice) {
-                case 1: createEvent(); break;
+                case 1:
+                    createEvent();
+                    break;
                 // case 2: getEvents("/all"); break;
-                case 2: updateEvent(); break;
-                case 3: deleteEvent(); break;
-                case 4: getEvents("/ongoing"); break;
-                case 5: getEvents("/upcoming"); break;
-                case 6: getEvents("/completed"); break;
-                case 7: return;
-                default: System.out.println("Invalid option!");
+                case 2:
+                    updateEvent();
+                    break;
+                case 3:
+                    deleteEvent();
+                    break;
+                case 4:
+                    getEvents("/ongoing");
+                    break;
+                case 5:
+                    getEvents("/upcoming");
+                    break;
+                case 6:
+                    getEvents("/completed");
+                    break;
+                case 7:
+                    return;
+                default:
+                    System.out.println("Invalid option!");
             }
         }
     }
@@ -59,14 +79,14 @@ public class Events {
         String date = scanner.nextLine();
         System.out.print("Enter time (HH:MM): ");
         String time = scanner.nextLine();
-        String uid = Auth.getUser().getString("uid") ;
+        String uid = Auth.getUser().getString("uid");
 
         JSONObject json = new JSONObject()
                 .put("title", title)
                 .put("description", description)
                 .put("date", date)
                 .put("time", time)
-                .put("createdBy" , uid) ;
+                .put("createdBy", uid);
 
         RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
 
@@ -108,7 +128,6 @@ public class Events {
         }
     }
 
-
     private static void updateEvent() throws IOException {
         if (Auth.getToken().isEmpty()) {
             System.out.println("Please login first.");
@@ -127,10 +146,14 @@ public class Events {
         String time = scanner.nextLine();
 
         JSONObject json = new JSONObject();
-        if (!title.isEmpty()) json.put("title", title);
-        if (!description.isEmpty()) json.put("description", description);
-        if (!date.isEmpty()) json.put("date", date);
-        if (!time.isEmpty()) json.put("time", time);
+        if (!title.isEmpty())
+            json.put("title", title);
+        if (!description.isEmpty())
+            json.put("description", description);
+        if (!date.isEmpty())
+            json.put("date", date);
+        if (!time.isEmpty())
+            json.put("time", time);
 
         RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
 
